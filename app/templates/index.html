@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mt-4">
+    <!-- Voting Form -->
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Cast Your Vote</h5>
+                <form action="/submit" id="textform" method="post">
+                    <div class="mb-3 row">
+                        <label class="col-sm-5 col-form-label">Select Political Party</label>
+                        <div class="col-sm-7">
+                            <select name="party" class="form-select" required>
+                                <option value="">Select</option>
+                                {% for political_partie in political_parties %}
+                                <option value="{{political_partie}}">{{political_partie}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-5 col-form-label">Enter Voter ID 
+                            <small class="text-muted">(from sample list)</small>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" name="voter_id" class="form-control" placeholder="VOID001" required>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Submit Vote</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Voter IDs -->
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3" style="max-height: 220px; overflow-y: auto;">
+            <div class="card-body">
+                <h6 class="card-title text-center">Sample Voter IDs</h6>
+                <table class="table table-striped table-sm text-center">
+                    <thead class="table-light">
+                        <tr><th>Voter ID</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for voter_id in voter_ids %}
+                        <tr><td>{{voter_id}}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="text-center my-3">
+    <a href="{{node_address}}/mine" target="_blank" class="btn btn-success mx-2">Request to Mine</a>
+    <a href="/" class="btn btn-secondary mx-2">Resync</a>
+    <a href="{{node_address}}/chain" target="_blank" class="btn btn-info mx-2 text-white">View Chain</a>
+</div>
+
+<hr>
+
+<!-- Results Section -->
+<div class="row mt-4">
+    <!-- Result Detail -->
+    <div class="col-md-7 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Result Detail</h5>
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Voter ID</th>
+                            <th>Political Party</th>
+                            <th>Voted Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td>{{post.voter_id}}</td>
+                            <td>{{post.party}}</td>
+                            <td>{{readable_time(post.timestamp)}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Summary -->
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Result Summary</h5>
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Political Party</th>
+                            <th>Total Votes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in political_parties %}
+                        <tr>
+                            <td>{{p}}</td>
+                            <td>{{vote_gain.count(p)}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
